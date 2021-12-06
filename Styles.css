@@ -38,6 +38,7 @@ body{
     width: 200px;
     height: 40px;
     margin-bottom: 48px;
+    display: none;
     justify-self: center;
     background-color: #0a0909;
     box-shadow:0 0 10px #0f0,0 0 10px #0f0,0 0 10px #0f0;
@@ -91,7 +92,6 @@ body{
     font-size: 16px;
     font-weight: bold;
     background-color: rgba(0, 255, 0, 0.692) ;
-  
     border-radius: 8px;
     border:none;
     color: #FFFFFF;
@@ -99,12 +99,6 @@ body{
 
 }
 
-@media(min-width: 768px){
-    .logo-container{
-        display: none;
-    }
-}
-/* -------------------END _New-Password--------------------- */
 
 /* -------------------email-sent--------------------- */
 .email-image{
@@ -133,4 +127,30 @@ body{
     color: var(--hospital-green);
     font-weight:bold;
     text-decoration: none;
+}
+
+/* -------------------email-sent--------------------- */
+
+.input-email{
+    font-size: 14px;
+}
+
+.signup-button{
+    width: 233px;
+    margin-top: 100px;   
+    color:#0f0;
+    background-color: black;
+    box-shadow:0 0 10px #0f0,0 0 10px #0f0,0 0 10px #0f0;
+
+}
+
+@media(max-width: 768px){
+    .logo-container{
+        display: block;
+    }
+    .signup-button{
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 24px;
+    }
 }
