@@ -143,6 +143,12 @@ body{
 
 }
 
+/* -------------------Account Edit--------------------- */
+.input-edit{
+    background-color: black;
+
+}
+
 
 
 @media(max-width: 768px){
@@ -150,6 +156,12 @@ body{
         display: block;
     }
     .signup-button{
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 24px;
+    }
+    .login-button__create{
+        width: 243px;
         position: absolute;
         bottom: 0;
         margin-bottom: 24px;
