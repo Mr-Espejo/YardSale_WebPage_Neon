@@ -52,6 +52,13 @@ body{
     border-radius: 8px;
     padding: 0 24px;
   }
+ .orders{
+    padding: 0;
+    border-radius: 0;
+    background-color: black;
+    grid-template-columns: auto 1fr auto;
+
+  }
   .order p:nth-child(1) {
     display: flex;
     flex-direction: column;
