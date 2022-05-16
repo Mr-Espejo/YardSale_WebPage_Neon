@@ -1,0 +1,211 @@
+create table auditoria
+   (usuario VARCHAR(100)
+   ,fecha VARCHAR(50)
+   ,tipo_accion VARCHAR(50)
+   ,nombre_tabla VARCHAR(50))
+   
+-- se crea la función para docente
+CREATE OR REPLACE FUNCTION ft_all_tables() RETURNS Trigger
+AS
+$$
+BEGIN
+IF (TG_TABLE_NAME = 'asignatura') THEN
+   IF (TG_OP = 'DELETE') THEN 
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Delete'
+	     ,'Asignatura');
+   ELSIF (TG_OP = 'UPDATE')  THEN
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Update'
+	     ,'Asignatura');
+   ELSIF (TG_OP = 'INSERT') THEN
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Insert'
+	     ,'Asignatura');
+   END IF;
+ELSIF (TG_TABLE_NAME = 'estudiante') THEN
+   IF (TG_OP = 'DELETE') THEN 
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Delete'
+	     ,'Estudiante');
+   ELSIF (TG_OP = 'UPDATE')  THEN
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Update'
+	     ,'Estudiante');
+   ELSIF (TG_OP = 'INSERT') THEN
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Insert'
+	     ,'Estudiante');
+   END IF;
+ELSIF (TG_TABLE_NAME = 'docente') THEN
+   IF (TG_OP = 'DELETE') THEN 
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Delete'
+	     ,'Docente');
+   ELSIF (TG_OP = 'UPDATE')  THEN
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Update'
+	     ,'Docente');
+   ELSIF (TG_OP = 'INSERT') THEN
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Insert'
+	     ,'Docente');
+   END IF;
+ELSIF (TG_TABLE_NAME = 'carrera') THEN
+   IF (TG_OP = 'DELETE') THEN 
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Delete'
+	     ,'Carrera');
+   ELSIF (TG_OP = 'UPDATE')  THEN
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Update'
+	     ,'Carrera');
+   ELSIF (TG_OP = 'INSERT') THEN
+      INSERT INTO auditoria
+	     (usuario
+		 ,fecha
+		 ,tipo_accion
+		 ,nombre_tabla)
+	  VALUES
+         (user
+         , now()
+         ,'Insert'
+	     ,'Carrera');
+   END IF;
+END IF;
+RETURN NEW;
+END
+$$
+Language plpgsql;
+
+
+-----------
+
+CREATE OR REPLACE TRIGGER tr_asignatura
+AFTER INSERT OR UPDATE OR DELETE ON asignatura
+FOR EACH ROW 
+EXECUTE PROCEDURE ft_all_tables();
+
+CREATE OR REPLACE TRIGGER tr_carrera
+AFTER INSERT OR UPDATE OR DELETE ON carrera
+FOR EACH ROW 
+EXECUTE PROCEDURE ft_all_tables();
+
+CREATE OR REPLACE TRIGGER tr_docente
+AFTER INSERT OR UPDATE OR DELETE ON docente
+FOR EACH ROW 
+EXECUTE PROCEDURE ft_all_tables();
+
+CREATE OR REPLACE TRIGGER tr_estudiante
+AFTER INSERT OR UPDATE OR DELETE ON estudiante
+FOR EACH ROW 
+EXECUTE PROCEDURE ft_all_tables();
+
+
+
+
+------------------------------
+
+CREATE OR REPLACE VIEW asignaturas_programa
+AS
+   SELECT nombre_car as Carrera, nombre_asignatura as Asignatura, COUNT(*) as Cantidad
+   FROM carrera_asignatura ca
+   INNER JOIN asignatura a
+   ON ca.ID_ASIGNATURA = a.ID_ASIGNATURA
+   INNER JOIN carrera c
+   ON c.id_carrera = ca.id_carrera
+   INNER JOIN estudiante e
+   ON e.id_carrera = ca.id_carrera
+   GROUP BY  nombre_car, nombre_asignatura
+	WITH READ ONLY
+/
+SELECT * FROM asignaturas_programa
+
+--------------------------------
+
+
+CREATE OR REPLACE VIEW docente_sin_asignaturar
+AS
+	SELECT d.ID_DOCENTE as ID, d.NOMBRE_DOC as Nombre
+	FROM docente d
+	LEFT JOIN  docente_asignatura da
+	ON da.id_docente = d.id_docente
+	WHERE da.id_docente IS NULL
+WITH READ ONLY
